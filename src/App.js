@@ -9,20 +9,23 @@ const App = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedBooks, setSelectedBooks] = useState([]);
 
+  // Define a URL base a partir da variável de ambiente
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // Load initial data
-    fetch("http://localhost:5000/users")
+    fetch(`${apiUrl}/users`)
       .then((res) => res.json())
       .then(setUsers);
 
-    fetch("http://localhost:5000/books")
+    fetch(`${apiUrl}/books`)
       .then((res) => res.json())
       .then(setBooks);
 
-    fetch("http://localhost:5000/rentals")
+    fetch(`${apiUrl}/rentals`)
       .then((res) => res.json())
       .then(setRentals);
-  }, []);
+  }, [apiUrl]);
 
   const handleRent = () => {
     if (!selectedUser || selectedBooks.length === 0) {
@@ -37,7 +40,7 @@ const App = () => {
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     };
 
-    fetch("http://localhost:5000/rentals", {
+    fetch(`${apiUrl}/rentals`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(rental),
