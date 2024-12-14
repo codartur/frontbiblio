@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 const App = () => {
+  console.log("API URL:", apiUrl);
   const [users, setUsers] = useState([]);
   const [books, setBooks] = useState([]);
   const [rentals, setRentals] = useState([]);
