@@ -1,8 +1,10 @@
 // Frontend - React App
 import React, { useState, useEffect } from "react";
 
+const URL = 'https://backbiblio.vercel.app'
+
 const App = () => {
-  console.log("API URL:", apiUrl);
+  console.log("API URL:", URL);
   const [users, setUsers] = useState([]);
   const [books, setBooks] = useState([]);
   const [rentals, setRentals] = useState([]);
@@ -10,47 +12,69 @@ const App = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedBooks, setSelectedBooks] = useState([]);
 
-  // Define a URL base a partir da variável de ambiente
-  const apiUrl = process.env.REACT_APP_API_URL;
-
   useEffect(() => {
     // Load initial data
-    fetch(`${apiUrl}/users`)
-      .then((res) => res.json())
-      .then(setUsers);
+    fetch(`${URL}/users`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar usuários");
+        return res.json();
+      })
+      .then(setUsers)
+      .catch((err) => console.error(err));
 
-    fetch(`${apiUrl}/books`)
-      .then((res) => res.json())
-      .then(setBooks);
+    fetch(`${URL}/books`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar livros");
+        return res.json();
+      })
+      .then(setBooks)
+      .catch((err) => console.error(err));
 
-    fetch(`${apiUrl}/rentals`)
-      .then((res) => res.json())
-      .then(setRentals);
-  }, [apiUrl]);
+    fetch(`${URL}/rentals`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar empréstimos");
+        return res.json();
+      })
+      .then(setRentals)
+      .catch((err) => console.error(err));
+  }, []); // Remove a dependência de `URL` para evitar loops infinitos
 
-  const handleRent = () => {
+  const handleRent = async () => {
     if (!selectedUser || selectedBooks.length === 0) {
       alert("Selecione um usuário e pelo menos um livro.");
       return;
     }
-
+  
     const rental = {
       user: selectedUser,
       books: selectedBooks,
       date: new Date().toISOString().split("T")[0],
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     };
-
-    fetch(`${apiUrl}/rentals`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rental),
-    })
-      .then((res) => res.json())
-      .then((newRental) => setRentals([...rentals, newRental]));
-
-    setSelectedUser(null);
-    setSelectedBooks([]);
+  
+    try {
+      const res = await fetch(`${URL}/rentals`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rental),
+      });
+  
+      if (!res.ok) {
+        throw new Error("Erro ao registrar empréstimo");
+      }
+  
+      const newRental = await res.json();
+  
+      // Atualizar a lista de empréstimos somente após o sucesso
+      setRentals((prevRentals) => [...prevRentals, newRental]);
+  
+      // Limpar os campos selecionados
+      setSelectedUser(null);
+      setSelectedBooks([]);
+    } catch (err) {
+      console.error(err);
+      alert("Ocorreu um erro ao registrar o empréstimo. Por favor, tente novamente.");
+    }
   };
 
   return (
