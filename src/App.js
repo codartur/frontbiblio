@@ -519,7 +519,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 
 //const URL = "https://backbiblio.onrender.com";
-const URL = "https://backbiblio.vercel.app/";
+const URL = "https://backbiblio.vercel.app";
 
 const App = () => {
   const [users, setUsers] = useState([]);
