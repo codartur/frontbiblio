@@ -27,6 +27,46 @@
   color: #61dafb;
 }
 
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Cria um grid responsivo */
+  gap: 20px; /* Espaçamento entre os itens */
+  padding: 20px;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 280px; /* Altura uniforme para os cards */
+  width: 150px;
+}
+
+.book-image {
+  width: 100%; /* Ocupa toda a largura do card */
+  height: 200px; /* Altura fixa para as imagens */
+  object-fit: cover; /* Ajusta as imagens ao tamanho do retângulo */
+}
+
+.book-info {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.book-info label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px; /* Espaçamento entre o checkbox e o título */
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -34,4 +74,5 @@
   to {
     transform: rotate(360deg);
   }
+  
 }
